@@ -1,0 +1,6 @@
+
+-D no-inline
+--class-path src
+--main MyPlugin
+-lib reflaxe.cpp
+-D cpp-output=out
