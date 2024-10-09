@@ -26,11 +26,11 @@ jobs:
             Write-Host "Haxe installation directory found."
           }
 
-          
+
       - name: Setup Haxelib
         shell: powershell
         run: |
-          & "C:\HaxeToolkit\haxe\haxelib.exe" setup
+          & "C:\HaxeToolkit\haxe\haxelib.exe" setup "C:/HaxeToolkit/haxe/lib/"
      
 
       - name: Run Haxe build
