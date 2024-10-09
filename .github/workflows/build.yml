@@ -11,8 +11,11 @@ jobs:
       - name: Download Haxe 4.3.6
         shell: powershell
         run: |
-          Invoke-WebRequest -Uri "https://haxe.org/download/file/4.3.6/haxe-4.3.6-win64.exe" -OutFile "haxe-install.exe"
-
+          $haxeUrl = "https://haxe.org/download/file/4.3.6/haxe-4.3.6-win64.exe"
+          $response = Invoke-WebRequest -Uri $haxeUrl -MaximumRedirection 0 -ErrorAction SilentlyContinue
+          $finalUrl = $response.Headers.Location
+          Invoke-WebRequest -Uri $finalUrl -OutFile "haxe-install.exe"
+          
       - name: Install Haxe 4.3.6
         shell: powershell
         run: |
