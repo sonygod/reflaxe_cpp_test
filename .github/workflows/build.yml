@@ -67,10 +67,10 @@ jobs:
           name: MyPlugin
           path: build/Release/MyPlugin.exe
 
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/')  # Only run on tag releases
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/Release/MyPlugin.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Release
+      #   if: startsWith(github.ref, 'refs/tags/')  # Only run on tag releases
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: build/Release/MyPlugin.exe
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
