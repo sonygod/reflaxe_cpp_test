@@ -16,7 +16,12 @@ jobs:
         run: |
           Start-Process -FilePath "install/haxe-4.3.6-win64.exe" -ArgumentList "/S" -Wait # Silent install
 
-     
+      - name: Add Haxe to PATH
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # 选择任意 Python 版本
+          env: |
+            PATH=${{ env.PATH }}:C:\HaxeToolkit\haxe\ # 将 Haxe 路径添加到 PATH
 
       - name: Run Haxe build
         shell: powershell
