@@ -12,10 +12,27 @@ jobs:
         shell: powershell
         run: |
           $haxeUrl = "https://haxe.org/download/file/4.3.6/haxe-4.3.6-win64.exe"
-          $response = Invoke-WebRequest -Uri $haxeUrl -MaximumRedirection 0 -ErrorAction SilentlyContinue
-          $finalUrl = $response.Headers.Location
-          Invoke-WebRequest -Uri $finalUrl -OutFile "haxe-install.exe"
-          
+          try {
+            # Send the initial request without following redirects
+            $response = Invoke-WebRequest -Uri $haxeUrl -MaximumRedirection 0 -ErrorAction Stop
+          } catch [System.Net.WebException] {
+            if ($_.Response.StatusCode -eq 302) {
+              # Capture the final URL from the redirect
+              $finalUrl = $_.Response.Headers["Location"]
+              if ($finalUrl) {
+                Write-Host "Resolved final download URL: $finalUrl"
+                Invoke-WebRequest -Uri $finalUrl -OutFile "haxe-install.exe"
+              } else {
+                Write-Host "Failed to resolve final URL."
+                exit 1
+              }
+            } else {
+              Write-Host "Unexpected error: $($_.Exception.Message)"
+              exit 1
+            }
+          }
+
+
       - name: Install Haxe 4.3.6
         shell: powershell
         run: |
