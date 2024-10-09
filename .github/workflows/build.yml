@@ -26,7 +26,7 @@ jobs:
       - name: Run Haxe build
         shell: powershell
         run: |
-          $env:PATH = "C:\HaxeToolkit\haxe\;C:\HaxeToolkit\haxelib\;$env:PATH"  # 添加 Haxe 和 haxelib 路径到 PATH
+          $env:PATH = "C:\HaxeToolkit\haxe\;$env:PATH"  # 添加 Haxe 和 haxelib 路径到 PATH
           haxe build.hxml
 
       - name: Install CMake
