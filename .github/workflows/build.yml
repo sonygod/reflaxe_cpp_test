@@ -38,7 +38,7 @@ jobs:
           haxe build.hxml
 
       - name: Install CMake
-        uses: jwlawson/actions-setup-cmake@v3.2
+        uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: 'latest'
           architecture: x64
