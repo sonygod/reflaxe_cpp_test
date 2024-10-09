@@ -16,19 +16,7 @@ jobs:
         run: |
           Start-Process -FilePath "install/haxe-4.3.6-win64.exe" -ArgumentList "/S" -Wait # Silent install
 
-      - name: Add Haxe to PATH
-        shell: powershell
-        run: |
-          $haxePath = (Get-ChildItem -Path "C:\Program Files\Haxe*" -Directory).FullName
-          if ($haxePath) {
-            Write-Host "Adding Haxe to PATH: $haxePath"
-            [Environment]::SetEnvironmentVariable("PATH", "$haxePath;$env:PATH", "Machine") # Persist across sessions
-          } else {
-            Write-Host "Haxe installation directory not found!"
-            exit 1
-          }
-          # Refresh environment variables for the current session
-          refreshenv
+     
 
       - name: Run Haxe build
         shell: powershell
