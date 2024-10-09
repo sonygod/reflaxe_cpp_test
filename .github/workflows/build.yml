@@ -30,7 +30,7 @@ jobs:
       - name: Setup Haxelib
         shell: powershell
         run: |
-          & "C:\HaxeToolkit\haxe\haxelib.exe" setup "C:\HaxeToolkit\haxe\lib\"
+          Start-Process powershell -Verb RunAs -ArgumentList '-Command "& "C:\HaxeToolkit\haxe\haxelib.exe" setup "C:\HaxeToolkit\haxe\lib\""'
      
 
       - name: Run Haxe build
