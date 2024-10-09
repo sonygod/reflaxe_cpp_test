@@ -26,18 +26,12 @@ jobs:
             Write-Host "Haxe installation directory found."
           }
 
-      - name: Add Haxe to PATH
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x' # 选择任意 Python 版本
-          env: |
-            PATH=${{ env.PATH }}:C:\HaxeToolkit\haxe\ # 将 Haxe 路径添加到 PATH
+     
 
       - name: Run Haxe build
         shell: powershell
         run: |
-          $env:PATH = "C:\HaxeToolkit\haxe\;$env:PATH"  # 添加 Haxe 路径到 PATH
-          haxe build.hxml
+          & "C:\HaxeToolkit\haxe\haxe.exe" build.hxml
 
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v2
