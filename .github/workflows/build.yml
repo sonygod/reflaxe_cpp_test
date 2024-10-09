@@ -16,6 +16,15 @@ jobs:
         run: |
           Start-Process -FilePath "install/haxe-4.3.6-win64.exe" -ArgumentList "/S" -Wait # Silent install
 
+       -name: Check Haxe Installation
+        shell: powershell
+        run: |
+          if (!(Test-Path -Path "C:\HaxeToolkit\haxe\")) {
+            Write-Error "Haxe installation directory not found!"
+            exit 1
+          } else {
+            Write-Host "Haxe installation directory found."
+          }
       - name: Add Haxe to PATH
         uses: actions/setup-python@v4
         with:
