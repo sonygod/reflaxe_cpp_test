@@ -1,0 +1,76 @@
+name: Build MyPlugin
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download Haxe 4.3.6
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://haxe.org/download/file/4.3.6/haxe-4.3.6-win64.exe" -OutFile "haxe-install.exe"
+
+      - name: Install Haxe 4.3.6
+        shell: powershell
+        run: |
+          Start-Process -FilePath "haxe-install.exe" -ArgumentList "/S" -Wait # Silent install
+
+      - name: Add Haxe to PATH
+        shell: powershell
+        run: |
+          $haxePath = (Get-ChildItem -Path "C:\Program Files\Haxe*" -Directory).FullName
+          if ($haxePath) {
+            Write-Host "Adding Haxe to PATH: $haxePath"
+            [Environment]::SetEnvironmentVariable("PATH", "$haxePath;$env:PATH", "Machine") # Persist across sessions
+          } else {
+            Write-Host "Haxe installation directory not found!"
+            exit 1
+          }
+          # Refresh environment variables for the current session
+          refreshenv
+
+      - name: Run Haxe build
+        shell: powershell
+        run: |
+          haxe build.hxml
+
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v3.2
+        with:
+          cmake-version: 'latest'
+          architecture: x64
+
+      - name: Create Build Directory
+        run: mkdir build
+
+      - name: Configure CMake
+        shell: powershell
+        working-directory: build
+        run: cmake .. -A x64 -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022"
+
+      - name: Build Project
+        shell: powershell
+        working-directory: build
+        run: cmake --build . --config Release
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: MyPlugin
+          path: build/Release/MyPlugin.exe
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')  # Only run on tag releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/Release/MyPlugin.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
